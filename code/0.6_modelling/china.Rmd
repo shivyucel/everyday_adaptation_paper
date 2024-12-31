@@ -1,0 +1,111 @@
+---
+title: "Model Outputs"
+output: html_notebook
+---
+# Load Packages
+```{r}
+library(tidycensus)
+library(tidyverse)
+library(sf)
+library(sjPlot)
+library(sjmisc)
+library(stargazer)
+library(lme4)
+library(lmerTest)
+library(sjPlot)
+library(sjmisc)
+library(ggplot2)
+
+library(ggeffects)
+library(performance)
+library(jtools)
+library(R2MLwiN)
+library(lmtest)
+## Change path to MLwiN executable as appropriate:
+options(MLwiN_path="/Users/shivyucel/Documents/projects/DPhil/Code_Data/mlwin/mlnscript")
+```
+
+# Notes
+* Parks has the lowest number of observations, removing it leads to model convergence with 5/6 response variables
+* Including HDI leads to no convergence, likely due to concentration of data in few adm1s
+* Most viable option is including all responses without parks, and all independent variables except HDI
+
+
+```{r}
+# v12 is full model variables
+#v17 is new demographic + popdens
+thi_mob_vars <- st_read("/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/paper2/china/THI_mobility_heat_w_vars_90_4SD.csv")
+
+#set up dependent variables
+thi_mob_vars$mobility_diff_pct <- as.numeric(thi_mob_vars$mobility_diff_pct)
+
+#set up independent variables
+
+#level 1 variables
+thi_mob_vars$stage_frac <- as.numeric(thi_mob_vars$stage_frac)
+
+thi_mob_vars$thi_heat <- as.numeric(thi_mob_vars$thi_heat)
+thi_mob_vars$thi_centered <- thi_mob_vars$thi_heat - mean(thi_mob_vars$thi_heat)
+
+
+thi_mob_vars$thi_diff <- as.numeric(thi_mob_vars$thi_diff)
+thi_mob_vars$rain_standard_heat <- as.numeric(thi_mob_vars$rain_standard_heat)
+thi_mob_vars$rain_standard_control <- as.numeric(thi_mob_vars$rain_standard_control)
+
+thi_mob_vars$HDI <- as.numeric(thi_mob_vars$HDI)
+thi_mob_vars$popdens_dec <- as.numeric(thi_mob_vars$popdens_dec)
+thi_mob_vars$HDI_dec <- as.numeric(thi_mob_vars$HDI_dec)
+thi_mob_vars$over60_dec <- as.numeric(thi_mob_vars$over60_dec)
+
+
+thi_mob_vars$weekend <- as.factor(thi_mob_vars$weekend)
+
+thi_mob_vars$coast <- as.factor(thi_mob_vars$coast)
+
+thi_mob_vars$elev_1500m <- as.factor(thi_mob_vars$elev_1500m)
+
+
+thi_mob_vars$thi_diff_centered <- as.numeric(thi_mob_vars$thi_diff) - mean(thi_mob_vars$thi_heat)
+
+thi_mob_vars$heatwave_dur <- as.factor(thi_mob_vars$heatwave_dur)
+
+
+```
+
+```{r}
+thi_mob_vars$mobility_diff_pct
+```
+
+```{r}
+# Model 4: Add coast and elevation
+
+model_thi <- runMLwiN(mobility_diff_pct ~  
+                       1 +
+                       thi_centered + thi_diff + rain_standard_heat + rain_standard_control +
+                      heatwave_dur + stage_frac + weekend +
+                       popdens_dec + HDI_dec + over60_dec +
+                       coast + elev_1500m + 
+                       
+                       (1|location) + (1|heat_ID) + (1|index) ,
+                    data = thi_mob_vars, ,estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 40)  )
+
+```
+
+```{r}
+model_thi
+```
+
+
+
+
+
+
+
+```{r}
+x <- data.frame(model_thi@FP)
+
+write.csv(x, file='/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/regression/THI_united_states_params_4SD.csv')
+```
+
+
+
