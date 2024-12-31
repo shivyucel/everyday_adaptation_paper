@@ -1,6 +1,6 @@
 # Global analysis of everyday adaptation
 
-This GitHub repository contains code for (Yücel et al., 2024),examining everyday adaptation to heatwaves at an international scale.
+This GitHub repository contains code for (Yücel et al., 2024), examining everyday adaptation to heatwaves at an international scale.
 
 # Overview 
 The steps presented in the repository are as follows:
