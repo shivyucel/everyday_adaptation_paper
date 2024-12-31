@@ -31,7 +31,7 @@ library(lmtest)
 
 ```{r}
 
-regression <- st_read('/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/paper2/results/plotting/china_coefs.csv')
+regression <- st_read('data/china_coefs.csv')
 regression$coef <- as.numeric(regression$coef)
 regression$ci <- as.numeric(regression$ci)
 
@@ -66,7 +66,7 @@ p2
 
 ```{r}
 
-mob_vars <- st_read("/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/paper2/results/plotting/temporal_coefs_v2.csv")
+mob_vars <- st_read("data/climate_temporal_coefs.csv")
 #mob_vars <- mob_vars %>% 
 #  mutate(response = fct_reorder(variable, variable, min)) %>%   arrange(response)
 
@@ -177,7 +177,8 @@ legend("bottom", legend = labels, fill = colors, border = borders, cex = 0.6, nc
 
 
 ```{r}
-mob_vars <- st_read("/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/paper2/results/plotting/temporal_coefs_v2.csv")
+
+mob_vars <- st_read("data/climate_temporal_coefs.csv")
 #mob_vars <- mob_vars %>% 
 #  mutate(response = fct_reorder(variable, variable, min)) %>%   arrange(response)
 
@@ -189,12 +190,29 @@ mob_vars$Turkey <- as.numeric(mob_vars$Turkey)
 mob_vars$Nigeria <- as.numeric(mob_vars$Nigeria)
 mob_vars$Brazil <- as.numeric(mob_vars$Brazil)
 
-
 color_fun <- function(data, variable) {
  colfun_var <- colorRamp2(c(-0.5, 0, 0.5, 1000), c("#D7191C", "white", "#1A9641", "darkgrey")) #specifies colors for each value, minimum, median, and maximum
  colfun_var(eval(substitute(data$variable))) #applies `colorRamp2` to get the specific color label 
 }
 
+```
+
+```{r}
+temp_diff <- mob_vars$response[mob_vars$variable =="Temp diff."]
+
+rain_heat <- mob_vars$response[mob_vars$variable =="Rain Heat"]
+rain_control <- mob_vars$response[mob_vars$variable =="Rain Control"]
+
+heatwave_dur <- mob_vars$response[mob_vars$variable =="Heatwave Dur."]
+
+stage_frac <- mob_vars$response[mob_vars$variable =="Stage frac."] 
+
+weekend <- mob_vars$response[mob_vars$variable =="Weekend"]
+
+
+```
+
+```{r}
 
 mob_vars = mob_vars[order(mob_vars$variable),]
 mob_vars = filter(mob_vars, variable =="Temp diff." | variable =="Rain Heat" | variable =="Rain Control")
@@ -271,7 +289,7 @@ legend("bottom", legend = labels, fill = colors, border = borders, cex = 0.6, nc
 
 ```{r}
 
-mob_vars <- st_read("/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/paper2/results/plotting/context_coefs_v2.csv")
+mob_vars <- st_read("data/context_coefs.csv")
 #mob_vars <- mob_vars %>% 
 #  mutate(response = fct_reorder(variable, variable, min)) %>%   arrange(response)
 
@@ -396,6 +414,40 @@ legend("bottom", legend = labels, fill = colors, border = borders, cex = 0.6, nc
 # all of your plotting code
 
 #dev.off()
+
+```
+
+
+```{r}
+
+mob_vars <- st_read("data/context_coefs.csv")
+#mob_vars <- mob_vars %>% 
+#  mutate(response = fct_reorder(variable, variable, min)) %>%   arrange(response)
+
+mob_vars$variable <- as.factor(mob_vars$variable)
+mob_vars$France <- as.numeric(mob_vars$France)
+mob_vars$India <- as.numeric(mob_vars$India)
+mob_vars$United_States <- as.numeric(mob_vars$United_States)
+mob_vars$Turkey <- as.numeric(mob_vars$Turkey)
+mob_vars$Nigeria <- as.numeric(mob_vars$Nigeria)
+mob_vars$Brazil <- as.numeric(mob_vars$Brazil)
+
+
+```
+
+
+```{r}
+
+popdens <- mob_vars$response[mob_vars$variable =="Pop. Dens."]
+
+HDI <- mob_vars$response[mob_vars$variable =="HDI"]
+
+over_60 <- mob_vars$response[mob_vars$variable =="Over 60"]
+
+coast <- mob_vars$response[mob_vars$variable =="Coast"]
+
+elev_1500 <- mob_vars$response[mob_vars$variable =="Elev > 1500"]
+
 
 ```
 
