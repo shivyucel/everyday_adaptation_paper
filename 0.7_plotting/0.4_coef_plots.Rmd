@@ -289,7 +289,7 @@ legend("bottom", legend = labels, fill = colors, border = borders, cex = 0.6, nc
 
 ```{r}
 
-mob_vars <- st_read("data/context_coefs.csv")
+mob_vars <- st_read("context_coefs.csv")
 #mob_vars <- mob_vars %>% 
 #  mutate(response = fct_reorder(variable, variable, min)) %>%   arrange(response)
 
@@ -420,7 +420,7 @@ legend("bottom", legend = labels, fill = colors, border = borders, cex = 0.6, nc
 
 ```{r}
 
-mob_vars <- st_read("data/context_coefs.csv")
+mob_vars <- st_read("/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/paper2/results/plotting/context_coefs.csv")
 #mob_vars <- mob_vars %>% 
 #  mutate(response = fct_reorder(variable, variable, min)) %>%   arrange(response)
 

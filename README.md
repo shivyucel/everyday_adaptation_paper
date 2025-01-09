@@ -25,4 +25,3 @@ References:
 
 > Zhang, Z., Parker, R. M. A., Charlton, C. M. J., Leckie, G., & Browne, W. J. (2016). R2MLwiN: A Package to Run MLwiN from within R. Journal of Statistical Software, 72(10). https://doi.org/10.18637/jss.v072.i10
 
-
