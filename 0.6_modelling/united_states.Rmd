@@ -4,7 +4,6 @@ output: html_notebook
 ---
 # Load Packages
 ```{r}
-library(tidycensus)
 library(tidyverse)
 library(sf)
 library(sjPlot)
@@ -18,7 +17,6 @@ library(ggplot2)
 
 library(ggeffects)
 library(performance)
-library(jtools)
 library(R2MLwiN)
 library(lmtest)
 ## Change path to MLwiN executable as appropriate:
@@ -29,7 +27,7 @@ options(MLwiN_path="/Users/shivyucel/Documents/projects/DPhil/Code_Data/mlwin/ml
 ```{r}
 # v12 is full model variables
 #v17 is new demographic + popdens
-thi_mob_vars <- st_read("/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/paper2/united_states/THI_mobility_heat_w_vars_90_4SD_precip.csv")
+mob_vars <- st_read("/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/paper2/united_states/THI_mobility_heat_w_vars_90_4SD_precip.csv")
 mob_vars$residential_difference <- as.numeric(mob_vars$residential_difference)
 mob_vars$workplaces_difference <- as.numeric(mob_vars$workplaces_difference)
 mob_vars$grocery_pharmacy_difference <- as.numeric(mob_vars$grocery_pharm_difference)
@@ -49,7 +47,7 @@ mob_vars$adm2 <- as.factor(mob_vars$adm2)
 mob_vars$thi_heat <- as.numeric(mob_vars$thi_heat)
 mob_vars$thi_centered <- mob_vars$thi_heat - mean(mob_vars$thi_heat)
 
-mob_vars$thi_diff <- as.numeric(mob_vars$temp_diff)
+mob_vars$thi_diff <- as.numeric(mob_vars$thi_diff)
 
 mob_vars$heatwave_dur <- as.factor(mob_vars$heatwave_dur)
 mob_vars$stage_frac <- as.numeric(mob_vars$stage_frac)
@@ -69,7 +67,6 @@ mob_vars$coast <- as.factor(mob_vars$coast)
 
 
 ```{r}
-# Model 4: Add coast and elevation
 
 model_thi <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference, grocery_pharmacy_difference, retail_difference, parks_difference) ~  
                        1 +
@@ -79,7 +76,7 @@ model_thi <- runMLwiN(c(residential_difference, workplaces_difference, transit_d
                        coast + elev_1500m + 
                        
                        (1|location) + (1|heat_ID) + (1|index) ,
-                    data = thi_mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 40)  )
+                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 40)  )
 
 ```
 

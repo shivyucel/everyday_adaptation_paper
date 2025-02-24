@@ -10,8 +10,7 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 ```{r}
 library(broom)
 library(tidyverse)
-library(circlize)
-library(tidycensus)
+
 library(tidyverse)
 library(sf)
 library(sjPlot)
@@ -24,7 +23,6 @@ library(sjmisc)
 library(ggplot2)
 library(ggeffects)
 library(performance)
-library(jtools)
 library(R2MLwiN)
 library(lmtest)
 ```
@@ -39,7 +37,7 @@ regression$p <- factor(regression$p)
 regression$variable <- as.character(regression$variable)
 regression$variable <- factor(regression$variable, levels=c('Elev > 1500m','Coast','Over 60','HDI', 'Popdens.', 'Weekend', 'Stage', 'Heatwave Dur.', 'Precip. Control', 'Precip. Heat', 'Temp Diff.', 'HI Temp', 'Intercept'))
 
-regression$p <- factor(regression$p, levels=c('p<0.1','p>=0.1'))
+regression$p <- factor(regression$p, levels=c('p<0.05','p>=0.05'))
 
 
 p2 <- ggplot(regression, aes(x=coef, y=variable, alpha=p, color=c)) + 
