@@ -4,7 +4,6 @@ output: html_notebook
 ---
 # Load Packages
 ```{r}
-library(tidycensus)
 library(tidyverse)
 library(sf)
 library(sjPlot)
