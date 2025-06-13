@@ -8,7 +8,6 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ```{r}
-library(tidycensus)
 library(tidyverse)
 library(sf)
 library(sjPlot)
@@ -21,7 +20,6 @@ library(sjmisc)
 library(ggplot2)
 library(ggeffects)
 library(performance)
-library(jtools)
 library(R2MLwiN)
 library(lmtest)
 library(ggsci)
@@ -78,7 +76,6 @@ mob_vars$popden_dec <-  as.numeric(mob_vars$popden_dec)
 
 
 ```{r}
-
 #combine intensity, duration, coast, elevation plots
 drop_duplicates <- mob_vars[!duplicated(mob_vars$heat_ID), ]
 
@@ -147,7 +144,9 @@ elev <- ggplot(df.summary2, aes(adm0, thi_heat)) +
 
    theme(axis.text.x = element_text(angle = 30, vjust=0.5))
 
-ggarrange(intensity, duration, coast, elev, common.legend =FALSE, labels=c("A", "B", "C", "D"))
+combined <- ggarrange(intensity, duration, coast, elev, common.legend =FALSE, labels=c("A", "B", "C", "D"))
+
+ggsave('/Users/shivyucel/Documents/projects/DPhil/Code_Data/paper2_repo/__clean/0.6_modelling/figs/descriptives.pdf', combined, width=8, height=5)
 ```
 
 

@@ -76,7 +76,7 @@ model_thi <- runMLwiN(c(residential_difference, workplaces_difference, transit_d
                        coast + elev_1500m + 
                        
                        (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 40)  )
+                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.force=TRUE, resi.store=TRUE, maxiter = 40)  )
 
 ```
 
@@ -91,7 +91,7 @@ model_thi
 ```{r}
 x <- data.frame(model_thi@FP)
 
-write.csv(x, file='/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/regression/THI_united_states_params_4SD_precip.csv')
+write.csv(x, file='/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/regression/THI_united_states_params_4SD_precip_sort_v1.csv')
 ```
 
 

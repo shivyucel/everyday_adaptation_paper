@@ -57,7 +57,7 @@ mob_vars$thi_heat <- as.numeric(mob_vars$thi_heat)
 mob_vars$thi_centered <- mob_vars$thi_heat - mean(mob_vars$thi_heat)
 
 
-mob_vars$temp_diff <- as.numeric(mob_vars$temp_diff)
+mob_vars$thi_diff <- as.numeric(mob_vars$temp_diff)
 
 mob_vars$HDI <- as.numeric(mob_vars$HDI)
 mob_vars$popden_dec <- as.numeric(mob_vars$popden_dec)
@@ -78,138 +78,24 @@ mob_vars$heatwave_dur <- as.factor(mob_vars$heatwave_dur)
 
 ```
 
-# Check convergence only with basic explanatory variables
-* No convergence with all 6 variables
-* The only 5/6 combination that leads to convergence is removing parks
-
-```{r}
-# Model 1: Try all 6 responses with basic variables
-
-#Does not converge
-
-model_24 <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference, grocery_pharmacy_difference, retail_difference, parks_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-```
-
-```{r}
-
-# Model 2: All except parks (least present in data set)
-# CONVERGES
-
-model_24 <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference, grocery_pharmacy_difference, retail_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-
-
-```
-
-
-```{r}
-# Model 3: All except retail 
-# DOES NOT CONVERGE
-
-model_24 <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference, grocery_pharmacy_difference, parks_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-
-```
-
-
-```{r}
-# Model 4: All except grocery_pharmacy 
-# DOES NOT CONVERGE
-
-model_24 <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference, retail_difference, parks_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-```
-
-
-```{r}
-# Model 5: All except transit 
-# DOES NOT CONVERGE
-
-model_24 <- runMLwiN(c(residential_difference, workplaces_difference, grocery_pharmacy_difference, retail_difference, parks_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-```
-
-
-# Include socio-economic/physical variables with best performing model from earlier (all except parks)
-* HDI does not converge
-* popdens, coast, and over60 all converge when included together
-* This is a viable model which includes 5/6 total response variables
-
-```{r}
-# Model 6: Begin with just population density
-# CONVERGES
-model_24 <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference,  grocery_pharmacy_difference, retail_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       popden_dec +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-```
-
-```{r}
-# Model 7: Just HDI
-# DOES NOT CONVERGE
-
-model_24 <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference,  grocery_pharmacy_difference, retail_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       HDI_dec +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-```
 
 ```{r}
 # Model 8: popden + coast
 #CONVERGES
 
-ng_model <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference, grocery_pharmacy_difference, retail_difference) ~  
+ng_model <- runMLwiN(c(residential_difference, workplaces_difference, grocery_pharmacy_difference, retail_difference) ~  
                        1 +
-                       thi_centered + temp_diff + rain_standard_heat + rain_standard_control +
-                       stage_frac + weekend + heatwave_dur +
-                       HDI_dec + over60_dec + popden_dec +
+                       thi_centered + thi_diff + rain_standard_heat + rain_standard_control +
+                       heatwave_dur + stage_frac + weekend +
+                       HDI_dec + 
                        coast +
-
+                       
                        (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 100)  )
+                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.force=TRUE, resi.store=TRUE, maxiter = 500)  )
 
 ```
+
+
 ```{r}
 ng_model
 ```
@@ -256,11 +142,14 @@ model_24 <- runMLwiN(c(residential_difference, workplaces_difference, transit_di
 ```
 
 
+```{r}
+summary(ng_model)
+```
 
 ```{r}
 x <- data.frame(ng_model@FP)
 
-write.csv(x, file='/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/regression/THI_nigeria_params_4SD_precip.csv')
+write.csv(x, file='/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/regression/THI_nigeria_params_4SD_precip_sort_v1.csv')
 ```
 
 

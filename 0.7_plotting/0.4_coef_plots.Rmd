@@ -10,7 +10,7 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 ```{r}
 library(broom)
 library(tidyverse)
-
+library(circlize)
 library(tidyverse)
 library(sf)
 library(sjPlot)
@@ -56,6 +56,8 @@ p2 <- ggplot(regression, aes(x=coef, y=variable, alpha=p, color=c)) +
   theme_bw()+ 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
+ggsave('/Users/shivyucel/Documents/projects/DPhil/Code_Data/paper2_repo/__clean/0.6_modelling/figs/china_modelling.pdf', width=7, height=5)
+
 p2
 ```
 
@@ -100,6 +102,7 @@ weekend <- mob_vars$response[mob_vars$variable =="Weekend"]
 
 
 ```{r}
+pdf('tempoeral_plot.pdf')
 mob_vars = mob_vars[order(mob_vars$variable),]
 mob_vars = filter(mob_vars, variable =="Heatwave Dur." | variable =="Stage frac." | variable =="Weekend")
 
@@ -169,7 +172,7 @@ labels <- matrix(c("Outer Ring: United States", "coef <= -5", "coef=0", "5 <= co
 
 
 legend("bottom", legend = labels, fill = colors, border = borders, cex = 0.6, ncol = 5)
-
+dev.off()
 ```
 
 
@@ -211,6 +214,9 @@ weekend <- mob_vars$response[mob_vars$variable =="Weekend"]
 ```
 
 ```{r}
+
+pdf('climate_plot.pdf')
+
 
 mob_vars = mob_vars[order(mob_vars$variable),]
 mob_vars = filter(mob_vars, variable =="Temp diff." | variable =="Rain Heat" | variable =="Rain Control")
@@ -282,12 +288,13 @@ labels <- matrix(c("Outer Ring: United States", "coef <= -0.5", "coef=0", "0.5 <
 
 legend("bottom", legend = labels, fill = colors, border = borders, cex = 0.6, ncol = 5)
 
+dev.off()
 ```
 
 
 ```{r}
 
-mob_vars <- st_read("context_coefs.csv")
+mob_vars <- st_read("data/context_coefs.csv")
 #mob_vars <- mob_vars %>% 
 #  mutate(response = fct_reorder(variable, variable, min)) %>%   arrange(response)
 
@@ -321,6 +328,7 @@ elev_1500 <- mob_vars$response[mob_vars$variable =="Elev > 1500"]
 
 
 ```{r}
+pdf('context_plot.pdf')
 
 color_fun <- function(data, variable) {
  colfun_var <- colorRamp2(c(-1, 0, 1, 1000), c("#D7191C", "white", "#1A9641", "darkgrey")) #specifies colors for each value, minimum, median, and maximum
@@ -411,14 +419,14 @@ legend("bottom", legend = labels, fill = colors, border = borders, cex = 0.6, nc
 
 # all of your plotting code
 
-#dev.off()
+dev.off()
 
 ```
 
 
 ```{r}
 
-mob_vars <- st_read("/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/paper2/results/plotting/context_coefs.csv")
+mob_vars <- st_read("data/context_coefs.csv")
 #mob_vars <- mob_vars %>% 
 #  mutate(response = fct_reorder(variable, variable, min)) %>%   arrange(response)
 
@@ -433,6 +441,9 @@ mob_vars$Brazil <- as.numeric(mob_vars$Brazil)
 
 ```
 
+```{r}
+mob_vars
+```
 
 ```{r}
 
@@ -450,6 +461,8 @@ elev_1500 <- mob_vars$response[mob_vars$variable =="Elev > 1500"]
 ```
 
 ```{r}
+pdf('physgeo.pdf')
+
 
 color_fun <- function(data, variable) {
  colfun_var <- colorRamp2(c(-3, 0, 3, 1000), c("#D7191C", "white", "#1A9641", "darkgrey")) #specifies colors for each value, minimum, median, and maximum
@@ -540,7 +553,7 @@ legend("bottom", legend = labels, fill = colors, border = borders, cex = 0.6, nc
 
 # all of your plotting code
 
-#dev.off()
+dev.off()
 
 ```
 

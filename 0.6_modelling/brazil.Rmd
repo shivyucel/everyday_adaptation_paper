@@ -4,7 +4,6 @@ output: html_notebook
 ---
 # Load Packages
 ```{r}
-library(tidycensus)
 library(tidyverse)
 library(sf)
 library(sjPlot)
@@ -18,7 +17,6 @@ library(ggplot2)
 
 library(ggeffects)
 library(performance)
-library(jtools)
 library(R2MLwiN)
 library(lmtest)
 ## Change path to MLwiN executable as appropriate:
@@ -86,60 +84,7 @@ mob_vars$heatwave_dur <- as.factor(mob_vars$heatwave_dur)
 
 ```
 
-# Check convergence only with basic explanatory variables
-* Converges
 
-```{r}
-# Model 1: Try all 6 responses with basic variables
-#Converges
-model_1 <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference, grocery_pharmacy_difference, retail_difference, parks_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-```
-```{r}
-model_1
-```
-
-
-```{r}
-# Model 2: Add popdens 
-
-model_2 <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference, grocery_pharmacy_difference, retail_difference, parks_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       popden_dec +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-```
-```{r}
-model_2
-```
-
-```{r}
-# Model 3: Add popdens + HDI + age
-
-model_3 <- runMLwiN(c(residential_difference, workplaces_difference, transit_difference, grocery_pharmacy_difference, retail_difference, parks_difference) ~  
-                       1 +
-                       heat_temp_centered + temp_diff + 
-                       early_hw + heatwave_dur + stage_frac + weekend +
-                       popden_dec + HDI_dec + over60_dec +
-                       
-                       (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
-
-```
-
-```{r}
-model_3
-```
 
 ```{r}
 
@@ -151,7 +96,7 @@ br_model <- runMLwiN(c(residential_difference, workplaces_difference, transit_di
                        coast +
                        
                        (1|location) + (1|heat_ID) + (1|index) ,
-                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 30)  )
+                    data = mob_vars, D = "Multivariate Normal",estoptions = list(sort.force=TRUE, resi.store=TRUE, maxiter = 30)  )
 
 ```
 
@@ -168,7 +113,7 @@ br_model
 ```{r}
 x <- data.frame(br_model@FP)
 
-write.csv(x, file='/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/regression/thi_brazil_params_4SD_precip.csv')
+write.csv(x, file='/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/regression/thi_brazil_params_4SD_precip_sort_v1.csv')
 ```
 
 

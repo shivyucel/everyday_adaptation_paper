@@ -4,7 +4,6 @@ output: html_notebook
 ---
 # Load Packages
 ```{r}
-library(tidycensus)
 library(tidyverse)
 library(sf)
 library(sjPlot)
@@ -18,7 +17,6 @@ library(ggplot2)
 
 library(ggeffects)
 library(performance)
-library(jtools)
 library(R2MLwiN)
 library(lmtest)
 ## Change path to MLwiN executable as appropriate:
@@ -87,7 +85,7 @@ model_thi <- runMLwiN(mobility_diff_pct ~
                        coast + elev_1500m + 
                        
                        (1|location) + (1|heat_ID) + (1|index) ,
-                    data = thi_mob_vars, ,estoptions = list(sort.ignore=TRUE, resi.store=TRUE, maxiter = 40)  )
+                    data = thi_mob_vars, ,estoptions = list(sort.force=TRUE, resi.store=TRUE, maxiter = 40)  )
 
 ```
 
@@ -104,7 +102,7 @@ model_thi
 ```{r}
 x <- data.frame(model_thi@FP)
 
-write.csv(x, file='/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/regression/THI_united_states_params_4SD.csv')
+write.csv(x, file='/Users/shivyucel/Documents/projects/DPhil/Code_Data/data/regression/THI_china_params_4SD.csv')
 ```
 
 
